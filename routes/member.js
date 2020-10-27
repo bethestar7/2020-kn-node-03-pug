@@ -4,7 +4,7 @@ const router = express.Router(); //express의 Router 객체 불러오기 // new 
 router.get('/login', (req, res, next) => { //router에 /login으로 요청이 들어오면~
 	const pug = {
 		title: "로그인 페이지",
-		scriptFile: '../js/f-member.js'
+		scriptFile: '../js/f-member.js' //내가 쓰는 자바스크립트 등록
 	}
 	res.render('./member/login.pug', pug)
 });
