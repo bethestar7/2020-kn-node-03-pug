@@ -1,0 +1,40 @@
+<script>
+	//콜백 함수
+	//콜백 구현
+	function callbackSum(a, b, fn) { //callbackSum 함수는 인자를 두개 받고 함수(콜백)를 세 번째 인자로 받는다
+		//fn(a + b); //a랑 b를 더해서 내가 받는 콜백함수 fn에 넣을 것임
+		if(typeof a === 'number' && typeof b === 'number') {
+				fn(null, a + b); 
+			}
+			else { 
+				fn("매개변수는 숫자여야 합니다.", null);
+			}
+	}
+	//콜백 사용
+	callbackSum(10, "30", function(err, result) { //콜백함수는 대부분 첫번재 인자가 에러(생략하는 경우가 많지만)
+		if(err) console.log("ERROR:" + err);
+		else console.log("두 변수의 합은 " + result + "입니다");
+	});
+
+
+	//promise로 구현한 콜백 함수 (가독성이 좋아진다)
+	//콜백 구현
+	function promiseSum(a, b) {
+		return new Promise(function(resolve, reject) { //promise 객체를 리턴. promise 객체는 콜백함수를 가진다. 인자는 보통 저걸로 쓴다고 함
+			if(typeof a === 'number' && typeof b === 'number') {
+				resolve(a + b); //인자 둘 다 숫자면 값 계산하고
+			}
+			else { //아니면 내보낼 것
+				reject("매개변수는 숫자여야 합니다.")
+			}
+		}); 
+	};
+	//콜백 실행
+	promiseSum(10, "20")
+		.then(function(r) { //성공했을 때
+			console.log("두 변수의 합은 " + r + "입니다");
+		})
+		.catch(function(err){ //실패했을 때
+			console.log(err);
+		})
+</script>

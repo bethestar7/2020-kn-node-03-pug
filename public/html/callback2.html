@@ -1,0 +1,87 @@
+<script>
+	//콜백 함수
+	//콜백 구현
+	function callbackSum(a, b, fn) { //callbackSum 함수는 인자를 두개 받고 함수(콜백)를 세 번째 인자로 받는다
+		//fn(a + b); //a랑 b를 더해서 내가 받는 콜백함수 fn에 넣을 것임
+		if(typeof a === 'number' && typeof b === 'number') {
+				fn(null, a + b); //콜백함수 작성 시, 오류값을 먼저 넣는다 null넣으면 에러가 없다는 뜻(비어있다, 에러없다). 여기 에러없다고 넣어주는 것.
+			}
+			else { 
+				fn("매개변수는 숫자여야 합니다.", null); //이 null은 굳이 필요없다
+			}
+	}
+	//콜백 구현
+	function callbackDate(day, fn) { //callbackDate 함수는 인자로 데이터를 주면 그거에대한 함수를 받는다? (위의 callbackSum의 값을 받아서 또 진행예정)
+		if (typeof day === "number") {
+			var dt = new Date().getTime() + day * 1000 * 60 * 60 * 24; //타임스탬프값 받기 + 값 * 1000 * 시 * 분 * 초(하루를 초로 변환)
+			fn(null, new Date(dt)); //날짜 형태로
+		}
+		else {
+			fn("날짜는 숫자 형식이어야 합니다.", null);
+		}
+	};
+	//콜백 사용
+	callbackSum(20, 2, function(err, result) { //콜백함수는 대부분 첫번재 인자가 에러(생략하는 경우가 많지만)
+		if(err) console.log("ERROR:" + err);
+		else {
+			callbackDate(result, function(err, r) {
+				if(err) console.log(err);
+				else console.log(`현재 시간에 ${result}일을 더하면 ${r} 입니다.`); 
+			});
+		}
+	});
+
+
+	//ES6 의 Promise
+	//promise로 구현한 콜백 함수 (가독성이 좀 더 좋아진다) > es7에서 async await가 나옴(더 가독성 좋음)
+	//콜백 구현
+	function promiseSum(a, b) {
+		return new Promise(function(resolve, reject) { //promise 객체를 리턴. promise 객체는 콜백함수를 가진다. 인자는 보통 저걸로 쓴다고 함
+			if(typeof a === 'number' && typeof b === 'number') {
+				resolve(a + b); //인자 둘 다 숫자면 값 계산하고
+			}
+			else { //아니면 내보낼 것
+				reject("매개변수는 숫자여야 합니다.")
+			}
+		}); 
+	};
+	//콜백 구현
+	function promiseDate(day) {
+		return new Promise(function(resolve, reject) {
+			if(typeof day === 'number') {
+				var dt = new Date().getTime() + day * 1000 * 60 * 60 * 24; 
+				resolve(new Date(dt));
+			}
+			else reject('날짜는 숫자형식이어야 합니다.');
+		});
+	};
+	//콜백 실행
+	promiseSum(10, 20)
+		.then(function(r) { //성공했을 때 - resolve 절
+			console.log("두 변수의 합은 " + r + "입니다");
+			return promiseDate(r);
+		})
+		.then(function(r2) { //성공했을 때 - resolve 절
+			console.log(`${r2} 입니다.`); 
+		})
+		.catch(function(err){ //실패했을 때 - reject 절
+			console.log(err);
+		});
+
+		
+	
+	//ES7 의 IIFE (Immediatly Invoked Function Expression) 즉시 실행하는 함수 표현식 / 비동기를 기다렸다가 해라
+	(async function(){ //()를 실행하시오 > 즉시 실행
+		try {
+			var r = await promiseSum(10, 20); //r에 10과 20을 더한 결과값이 들어간다 // then 하나가 이 한줄로 들어온 것!
+			var r2 = await promiseDate(r);
+			console.log(r, r2);
+		}
+		catch(e) {
+			console.log(e);
+		}
+	})(); 
+
+
+
+</script>

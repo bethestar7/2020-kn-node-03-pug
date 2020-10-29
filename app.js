@@ -3,6 +3,7 @@ const express = require('express'); //express 모듈 불러오기
 const app = express(); //express실행한 결과를 app변수에 담기
 const path = require('path'); //node가 가진 내장 path모듈 가져오기 (nodemon은 글로벌(전역)로 다운해서 c드라이브(nodejs)에 저장된다)
 //이 명령을 통해서 경로를 갖다 붙일 수 있다
+require('dotenv').config(); //dotenv 안의 config 메서드 / dotenv를 쓸 수 있는 준비 / dotenv에 들어가는 환경변수는 .env 파일에 저장?
 
 
 
@@ -32,12 +33,13 @@ const path = require('path'); //node가 가진 내장 path모듈 가져오기 (n
 //router 등록하기
 const memberRouter = require('./routes/member');
 const sqlRouter = require('./routes/sql'); //sql.js 파일 불러와.
+const sqlRouter2 = require('./routes/sql2'); //sql.js 파일 불러와.
 
 
 
 /** 서버 구동 *******************/
 //서버 구동하기
-app.listen(3000, () => { console.log('http://127.0.0.1:3000') });
+app.listen(process.env.PORT, () => { console.log('http://127.0.0.1:3000') }); //process.env.PORT 하면 3000이 들어간다
 
 
 
@@ -59,3 +61,4 @@ app.use('/storage', express.static(path.join(__dirname, './uploads')));
 ///member로 요청들어오면 응답보낼 수 있게 router연결?
 app.use('/member', memberRouter);
 app.use('/sql', sqlRouter); // /sql로 요청들어오면 sqlRouter로 보내!
+app.use('/sql2', sqlRouter2); // /sql로 요청들어오면 sqlRouter로 보내!
